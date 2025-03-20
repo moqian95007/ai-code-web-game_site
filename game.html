@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameHub - Play Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4, #45B7D1);
+            min-height: 100vh;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+        }
+        .game-container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .game-header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .back-button {
+            padding: 0.5rem 1rem;
+            background-color: #FF6B6B;
+            color: white;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .back-button:hover {
+            background-color: #FF5252;
+        }
+        .game-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding: 1rem;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .game-frame-container {
+            width: 100%;
+            min-height: 600px;
+            height: 80vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            aspect-ratio: 16/9;
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        .game-info {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: #333;
+        }
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #FF6B6B;
+        }
+        .game-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .game-controls {
+            margin-bottom: 1.5rem;
+        }
+        .game-controls h3 {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #4ECDC4;
+        }
+        .game-controls ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .game-controls li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .game-controls li:before {
+            content: "•";
+            color: #FF6B6B;
+            position: absolute;
+            left: 0;
+        }
+        .game-tips {
+            background: rgba(255, 107, 107, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+        .game-tips h3 {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #FF6B6B;
+        }
+        .game-tips ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .game-tips li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .game-tips li:before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+        .comments-section {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: #333;
+            margin-top: 1rem;
+        }
+        .comments-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #FF6B6B;
+        }
+        .comment-form {
+            margin-bottom: 2rem;
+        }
+        .comment-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+        .comment-input:focus {
+            outline: none;
+            border-color: #FF6B6B;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+        .submit-comment {
+            background-color: #FF6B6B;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .submit-comment:hover {
+            background-color: #FF5252;
+        }
+        .comments-list {
+            margin-top: 2rem;
+        }
+        .comment {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .comment-author {
+            font-weight: 600;
+            color: #FF6B6B;
+        }
+        .comment-date {
+            color: #718096;
+            font-size: 0.875rem;
+        }
+        .comment-content {
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .game-content {
+                flex-direction: column;
+            }
+            .game-frame-container {
+                min-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <a href="index.html" class="back-button">Back to Games</a>
+            <h1 class="text-xl font-bold text-gray-900">GameHub</h1>
+        </header>
+        <div class="game-content">
+            <div class="game-frame-container">
+                <iframe id="gameFrame" class="game-frame" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="game-info">
+                <h2 id="gameTitle" class="game-title">Loading game info...</h2>
+                <div class="game-description">
+                    <p id="gameDescription">Loading game description...</p>
+                </div>
+                <div class="game-controls">
+                    <h3>How to Play</h3>
+                    <ul id="gameControls">
+                        <li>Loading controls...</li>
+                    </ul>
+                </div>
+                <div class="game-tips">
+                    <h3>Pro Tips</h3>
+                    <ul id="gameTips">
+                        <li>Loading tips...</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="comments-section">
+                <h2 class="comments-title">Comments</h2>
+                <div class="comment-form">
+                    <textarea id="commentInput" class="comment-input" placeholder="Share your thoughts about this game..."></textarea>
+                    <button onclick="submitComment()" class="submit-comment">Post Comment</button>
+                </div>
+                <div id="commentsList" class="comments-list">
+                    <!-- Sample comments -->
+                    <div class="comment">
+                        <div class="comment-header">
+                            <span class="comment-author">GameMaster</span>
+                            <span class="comment-date">2 hours ago</span>
+                        </div>
+                        <div class="comment-content">
+                            This game is amazing! The controls are smooth and the gameplay is addictive.
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <div class="comment-header">
+                            <span class="comment-author">Player123</span>
+                            <span class="comment-date">5 hours ago</span>
+                        </div>
+                        <div class="comment-content">
+                            Great game! I've been playing it for hours. The graphics are really good.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get game URL from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameUrl = urlParams.get('url');
+        
+        // Game information database
+        const gameInfo = {
+            'monster-survivors': {
+                title: 'Monster Survivors',
+                description: 'Survive waves of monsters in this exciting action game. Collect power-ups, upgrade your abilities, and become the ultimate survivor!',
+                controls: [
+                    'Use WASD or Arrow keys to move',
+                    'Mouse to aim and shoot',
+                    'Space to use special abilities',
+                    'E to interact with items'
+                ],
+                tips: [
+                    'Focus on collecting experience orbs to level up',
+                    'Upgrade your weapons first for better survival',
+                    'Keep moving to avoid monster attacks',
+                    'Use special abilities when surrounded'
+                ]
+            },
+            'temple-run-2': {
+                title: 'Temple Run 2',
+                description: 'Run through ancient temples, collect coins, and escape from the evil monkey in this endless runner game!',
+                controls: [
+                    'Swipe left/right to turn',
+                    'Swipe up to jump',
+                    'Swipe down to slide',
+                    'Tilt device to collect coins'
+                ],
+                tips: [
+                    'Collect coins to unlock new characters',
+                    'Use power-ups to extend your run',
+                    'Watch out for obstacles',
+                    'Try to maintain a good speed'
+                ]
+            },
+            // Add more games here...
+        };
+
+        // Update game information based on URL
+        if (gameUrl) {
+            document.getElementById('gameFrame').src = decodeURIComponent(gameUrl);
+            
+            // Extract game name from URL
+            const gameName = gameUrl.split('/').pop().split('-og.html')[0];
+            
+            // Update game information if available
+            if (gameInfo[gameName]) {
+                const info = gameInfo[gameName];
+                document.getElementById('gameTitle').textContent = info.title;
+                document.getElementById('gameDescription').textContent = info.description;
+                
+                // Update controls
+                const controlsList = document.getElementById('gameControls');
+                controlsList.innerHTML = info.controls.map(control => `<li>${control}</li>`).join('');
+                
+                // Update tips
+                const tipsList = document.getElementById('gameTips');
+                tipsList.innerHTML = info.tips.map(tip => `<li>${tip}</li>`).join('');
+            }
+        }
+
+        // Comment functionality
+        function submitComment() {
+            const commentInput = document.getElementById('commentInput');
+            const commentText = commentInput.value.trim();
+            
+            if (commentText) {
+                const commentsList = document.getElementById('commentsList');
+                const now = new Date();
+                const timeString = now.toLocaleString('en-US', { 
+                    hour: 'numeric', 
+                    minute: 'numeric',
+                    hour12: true 
+                });
+                
+                const newComment = document.createElement('div');
+                newComment.className = 'comment';
+                newComment.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-author">Anonymous User</span>
+                        <span class="comment-date">${timeString}</span>
+                    </div>
+                    <div class="comment-content">
+                        ${commentText}
+                    </div>
+                `;
+                
+                // Add new comment at the top of the list
+                commentsList.insertBefore(newComment, commentsList.firstChild);
+                
+                // Clear input
+                commentInput.value = '';
+            }
+        }
+
+        // Allow submitting comment with Enter key (Shift+Enter for new line)
+        document.getElementById('commentInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitComment();
+            }
+        });
+    </script>
+</body>
+</html> 
